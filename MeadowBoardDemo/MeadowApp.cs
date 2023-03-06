@@ -19,10 +19,12 @@ namespace MeadowBoardDemo
         public override async Task Initialize()
         {
             Resolver.Services.GetOrCreate<AppSecrets>();
+            Resolver.Services.GetOrCreate<StatusLedService>();
             Resolver.Services.GetOrCreate<WifiService>();
             Resolver.Services.GetOrCreate<SmsService>();
-            Resolver.Services.GetOrCreate<StatusLedService>();
+            Resolver.Services.GetOrCreate<NotificationService>();
             _mailboxButtonService = Resolver.Services.GetOrCreate<MailboxButtonService>();
+
 
             await base.Initialize();
         }

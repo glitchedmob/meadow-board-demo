@@ -7,41 +7,36 @@ namespace MeadowBoardDemo.Services
     public class MailboxButtonService
     {
         private readonly Logger _logger;
-        private readonly SmsService _smsService;
-        private readonly WifiService _wifiService;
-        private readonly StatusLedService _statusLedService;
+        private readonly NotificationService _notificationService;
         private readonly PushButton _button;
 
-        public MailboxButtonService(Logger logger, SmsService smsService, WifiService wifiService,
-            StatusLedService statusLedService)
+        public MailboxButtonService(Logger logger, NotificationService notificationService)
         {
             _logger = logger;
-            _smsService = smsService;
-            _wifiService = wifiService;
-            _statusLedService = statusLedService;
+            _notificationService = notificationService;
             _button = new PushButton(MeadowApp.Device.Pins.D10);
         }
 
         public void StartListening()
         {
-            _button.PressStarted += async (sender, args) =>
+            _button.PressStarted += (sender, args) =>
             {
-                _logger.Info("Mailbox opened");
-                _statusLedService.StartBlinking(Color.Blue);
-                await _wifiService.Connect();
-                _statusLedService.StartBlinking(Color.Purple);
-                await _smsService.SendSms("Mailbox opened");
-                _statusLedService.StopBlinking();
+                _logger.Info("Mailbox switch open");
+
+                _notificationService.QueueNotification(new Notification
+                {
+                    Message = "Mailbox opened"
+                });
             };
 
-            _button.PressEnded += async (sender, args) =>
+            _button.PressEnded += (sender, args) =>
             {
-                _logger.Info("Mailbox closed");
-                _statusLedService.StartBlinking(Color.Green);
-                await _smsService.SendSms("Mailbox closed");
-                _statusLedService.StartBlinking(Color.Red);
-                await _wifiService.Disconnect();
-                _statusLedService.StopBlinking();
+                _logger.Info("Mailbox switch closed");
+
+                _notificationService.QueueNotification(new Notification
+                {
+                    Message = "Mailbox closed!"
+                });
             };
 
             _logger.Info("Started listening for button pressess");

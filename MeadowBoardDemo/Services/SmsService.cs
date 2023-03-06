@@ -6,12 +6,16 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Meadow.Foundation;
+using Meadow.Logging;
 
 namespace MeadowBoardDemo.Services
 {
     public class SmsService
     {
+        private readonly Logger _logger;
         private readonly AppSecrets _appSecrets;
+        private readonly StatusLedService _statusLedService;
 
         private Uri MessagesUrl => new Uri($"https://api.twilio.com/2010-04-01/Accounts/{_appSecrets.TwilioSid}/Messages.json");
 
@@ -26,9 +30,11 @@ namespace MeadowBoardDemo.Services
             }
         }
 
-        public SmsService(AppSecrets appSecrets)
+        public SmsService(Logger logger, AppSecrets appSecrets, StatusLedService statusLedService)
         {
+            _logger = logger;
             _appSecrets = appSecrets;
+            _statusLedService = statusLedService;
         }
 
         public async Task<MessageResponse?> SendSms(string message)
@@ -47,10 +53,16 @@ namespace MeadowBoardDemo.Services
 
             using var client = new HttpClient();
 
+            _statusLedService.StartBlinking(Color.Green);
+            _logger.Info("Sending SMS...");
+
             var response = await client.SendAsync(request);
             var json = await response.Content.ReadAsStringAsync();
 
             var messageResponse = JsonSerializer.Deserialize<MessageResponse>(json);
+
+            _logger.Info("SMS Sent");
+            _statusLedService.StopBlinking();
 
             return messageResponse;
         }
