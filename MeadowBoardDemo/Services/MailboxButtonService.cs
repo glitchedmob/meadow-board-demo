@@ -7,13 +7,13 @@ namespace MeadowBoardDemo.Services
     public class MailboxButtonService
     {
         private readonly Logger _logger;
-        private readonly NotificationService _notificationService;
+        private readonly SmsQueueingService _smsQueueingService;
         private readonly PushButton _button;
 
-        public MailboxButtonService(Logger logger, NotificationService notificationService)
+        public MailboxButtonService(Logger logger, SmsQueueingService smsQueueingService)
         {
             _logger = logger;
-            _notificationService = notificationService;
+            _smsQueueingService = smsQueueingService;
             _button = new PushButton(MeadowApp.Device.Pins.D10);
         }
 
@@ -23,20 +23,14 @@ namespace MeadowBoardDemo.Services
             {
                 _logger.Info("Mailbox switch open");
 
-                _notificationService.QueueNotification(new Notification
-                {
-                    Message = "Mailbox opened"
-                });
+                _smsQueueingService.QueueMessage("Mailbox opened");
             };
 
             _button.PressEnded += (sender, args) =>
             {
                 _logger.Info("Mailbox switch closed");
 
-                _notificationService.QueueNotification(new Notification
-                {
-                    Message = "Mailbox closed!"
-                });
+                _smsQueueingService.QueueMessage("Mailbox closed!");
             };
 
             _logger.Info("Started listening for button pressess");

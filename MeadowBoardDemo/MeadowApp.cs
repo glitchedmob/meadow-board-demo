@@ -22,7 +22,7 @@ namespace MeadowBoardDemo
             Resolver.Services.GetOrCreate<StatusLedService>();
             Resolver.Services.GetOrCreate<WifiService>();
             Resolver.Services.GetOrCreate<SmsService>();
-            Resolver.Services.GetOrCreate<NotificationService>();
+            Resolver.Services.GetOrCreate<SmsQueueingService>();
             _mailboxButtonService = Resolver.Services.GetOrCreate<MailboxButtonService>();
 
 

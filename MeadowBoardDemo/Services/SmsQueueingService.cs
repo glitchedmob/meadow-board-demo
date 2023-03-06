@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace MeadowBoardDemo.Services
 {
-    public class NotificationService
+    public class SmsQueueingService
     {
         private readonly WifiService _wifiService;
         private readonly SmsService _smsService;
-        private readonly Queue<Notification> _queue = new Queue<Notification>();
+        private readonly Queue<string> _queue = new Queue<string>();
         private bool _processingQueue = false;
 
-        public NotificationService(WifiService wifiService, SmsService smsService)
+        public SmsQueueingService(WifiService wifiService, SmsService smsService)
         {
             _wifiService = wifiService;
             _smsService = smsService;
         }
 
-        public void QueueNotification(Notification notification)
+        public void QueueMessage(string message)
         {
-            _queue.Enqueue(notification);
+            _queue.Enqueue(message);
 
             _ = ProcessQueue();
         }
@@ -37,9 +37,9 @@ namespace MeadowBoardDemo.Services
 
             await _wifiService.Connect();
 
-            while (_queue.TryDequeue(out var notification))
+            while (_queue.TryDequeue(out var message))
             {
-                await ProcessNotification(notification);
+                await ProcessMessage(message);
             }
 
             await _wifiService.Disconnect();
@@ -49,15 +49,9 @@ namespace MeadowBoardDemo.Services
             _ = ProcessQueue();
         }
 
-        private async Task ProcessNotification(Notification notification)
+        private async Task ProcessMessage(string message)
         {
-            await _smsService.SendSms(notification.Message);
+            await _smsService.SendSms(message);
         }
-    }
-
-
-    public class Notification
-    {
-        public string Message { get; set; } = null!;
     }
 }
