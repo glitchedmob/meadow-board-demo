@@ -6,5 +6,6 @@ AppSecrets:
     TwilioSid: ''
     TwilioNumber: ''
     NotificationNumber: ''
+    DbName: 'MeadowBoardDemo'
     WifiSsid: ''
     WifiPassword: ''

@@ -55,7 +55,7 @@ namespace MeadowBoardDemo.Services
             _statusLedService.StopBlinking();
         }
 
-        public async Task Disconnect()
+        public Task Disconnect()
         {
             _statusLedService.StartBlinking(Color.Blue);
             _logger.Info("Wifi disconnecting...");
@@ -64,6 +64,8 @@ namespace MeadowBoardDemo.Services
 
             _logger.Info("Wifi disconnected");
             _statusLedService.StopBlinking();
+
+            return Task.CompletedTask;
         }
     }
 }

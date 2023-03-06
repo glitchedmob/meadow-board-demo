@@ -35,14 +35,10 @@ namespace MeadowBoardDemo.Services
 
             _processingQueue = true;
 
-            await _wifiService.Connect();
-
             while (_queue.TryDequeue(out var message))
             {
                 await ProcessMessage(message);
             }
-
-            await _wifiService.Disconnect();
 
             _processingQueue = false;
 
