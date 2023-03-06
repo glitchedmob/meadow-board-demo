@@ -1,5 +1,10 @@
+Logging:
+  LogLevel:
+    Default: "Information"
 AppSecrets:
-  TwilioAuthToken: ''
-  TwilioNumber: ''
-  WifiSsid: ''
-  WifiPassword: ''
+    TwilioAuthToken: ''
+    TwilioSid: ''
+    TwilioNumber: ''
+    NotificationNumber: ''
+    WifiSsid: ''
+    WifiPassword: ''
