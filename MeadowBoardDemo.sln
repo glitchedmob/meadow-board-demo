@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeadowBoardDemo", "MeadowBoardDemo\MeadowBoardDemo.csproj", "{F8BA4241-19F7-43E5-B5CB-A5AE7FD4D710}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DABC1C3D-9C8B-43EB-9BED-29D22D1DDCA1}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8BA4241-19F7-43E5-B5CB-A5AE7FD4D710}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8BA4241-19F7-43E5-B5CB-A5AE7FD4D710}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8BA4241-19F7-43E5-B5CB-A5AE7FD4D710}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8BA4241-19F7-43E5-B5CB-A5AE7FD4D710}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

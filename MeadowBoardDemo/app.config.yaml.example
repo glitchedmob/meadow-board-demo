@@ -1,0 +1,5 @@
+AppSecrets:
+  TwilioAuthToken: ''
+  TwilioNumber: ''
+  WifiSsid: ''
+  WifiPassword: ''
