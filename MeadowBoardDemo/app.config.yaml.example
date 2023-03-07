@@ -1,11 +1,11 @@
 Logging:
   LogLevel:
-    Default: "Information"
+    Default: 'Information'
 AppSecrets:
     TwilioAuthToken: ''
     TwilioSid: ''
     TwilioNumber: ''
     NotificationNumber: ''
-    DbName: 'MeadowBoardDemo'
+    StorageFile: 'MeadowBoardDemo.json'
     WifiSsid: ''
     WifiPassword: ''

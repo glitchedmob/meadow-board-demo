@@ -10,41 +10,51 @@ namespace MeadowBoardDemo.Services
     {
         private readonly Logger _logger;
         private readonly SmsQueueingService _smsQueueingService;
-        private readonly DatabaseService _databaseService;
+        private readonly StorageService _storageService;
         private readonly PushButton _button;
 
-        public MailboxButtonService(Logger logger, SmsQueueingService smsQueueingService, DatabaseService databaseService)
+        public MailboxButtonService(Logger logger, SmsQueueingService smsQueueingService, StorageService storageService)
         {
             _logger = logger;
             _smsQueueingService = smsQueueingService;
-            _databaseService = databaseService;
+            _storageService = storageService;
             _button = new PushButton(MeadowApp.Device.Pins.D10);
         }
 
         public void StartListening()
         {
-            _button.PressStarted += (sender, args) =>
+            _button.PressStarted += async (sender, args) =>
             {
                 _logger.Info("Mailbox switch open");
 
-                _databaseService.Db.Insert(new MailboxLog
+                var logs = _storageService.GetMailboxLogs();
+
+                logs.Add(new MailboxLog
                 {
+                    Id = Guid.NewGuid(),
                     Type = MailboxLogType.MailboxOpened,
                     TimeStamp = DateTime.Now,
                 });
 
+                await _storageService.SaveMailboxLogs(logs);
+
                 _smsQueueingService.QueueMessage("Mailbox opened");
             };
 
-            _button.PressEnded += (sender, args) =>
+            _button.PressEnded += async (sender, args) =>
             {
                 _logger.Info("Mailbox switch closed");
 
-                _databaseService.Db.Insert(new MailboxLog
+                var logs = _storageService.GetMailboxLogs();
+
+                logs.Add(new MailboxLog
                 {
+                    Id = Guid.NewGuid(),
                     Type = MailboxLogType.MailboxClosed,
                     TimeStamp = DateTime.Now,
                 });
+
+                await _storageService.SaveMailboxLogs(logs);
 
                 _smsQueueingService.QueueMessage("Mailbox closed!");
             };

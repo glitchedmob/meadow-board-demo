@@ -12,7 +12,7 @@ namespace MeadowBoardDemo.Services
         private readonly Logger _logger;
         private readonly AppSecrets _appSecrets;
         private readonly StatusLedService _statusLedService;
-        private readonly IWiFiNetworkAdapter _wifi;
+        public IWiFiNetworkAdapter WifiAdapter { get; }
 
         public WifiService(IMeadowDevice device, Logger logger, AppSecrets appSecrets,
             StatusLedService statusLedService)
@@ -20,7 +20,7 @@ namespace MeadowBoardDemo.Services
             _logger = logger;
             _appSecrets = appSecrets;
             _statusLedService = statusLedService;
-            _wifi = device.NetworkAdapters.Primary<IWiFiNetworkAdapter>() ??
+            WifiAdapter = device.NetworkAdapters.Primary<IWiFiNetworkAdapter>() ??
                     throw new InvalidOperationException("Can't access Wifi adapter");
         }
 
@@ -29,9 +29,9 @@ namespace MeadowBoardDemo.Services
             _statusLedService.StartBlinking(Color.Blue);
             _logger.Info("Connecting to Wifi...");
 
-            if (_wifi.IsConnected)
+            if (WifiAdapter.IsConnected)
             {
-                _logger.Info($"Wifi connected. IP Address: {_wifi.IpAddress}");
+                _logger.Info($"Wifi connected. IP Address: {WifiAdapter.IpAddress}");
                 _statusLedService.StopBlinking();
                 return;
             }
@@ -43,15 +43,15 @@ namespace MeadowBoardDemo.Services
                 taskSource.TrySetResult(null);
             });
 
-            _wifi.NetworkConnected += networkConnectionHandler;
+            WifiAdapter.NetworkConnected += networkConnectionHandler;
 
-            await _wifi.Connect(_appSecrets.WifiSsid, _appSecrets.WifiPassword);
+            await WifiAdapter.Connect(_appSecrets.WifiSsid, _appSecrets.WifiPassword);
 
             await taskSource.Task;
 
-            _wifi.NetworkConnected -= networkConnectionHandler;
+            WifiAdapter.NetworkConnected -= networkConnectionHandler;
 
-            _logger.Info($"Wifi connected. IP Address: {_wifi.IpAddress}");
+            _logger.Info($"Wifi connected. IP Address: {WifiAdapter.IpAddress}");
             _statusLedService.StopBlinking();
         }
 
